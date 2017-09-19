@@ -1,3 +1,5 @@
+// This is a comment!
+
 final int CIRCLE_SPEED = 7;
 final color NO_CLICK_FILL_COLOR = color(250, 100, 100);
 final color CLICK_FILL_COLOR = color(100, 100, 250);
