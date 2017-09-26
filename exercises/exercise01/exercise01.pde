@@ -26,6 +26,9 @@ void setup() {
   circleVX = CIRCLE_SPEED;
   circleVY = CIRCLE_SPEED;
   
+  // changed initial curentCircleSize into 50 pixels
+  currentCircleSize = 50;
+  
   stroke(STROKE_COLOR);
   fill(NO_CLICK_FILL_COLOR);  
   background(BACKGROUND_COLOR);
@@ -33,13 +36,18 @@ void setup() {
 
 
 void draw() {
-    if (dist(mouseX, mouseY, circleX, circleY) < CIRCLE_SIZE/2) {
+  // changed making circle size smaller 5 pixels while everytime draw the circle
+  if (currentCircleSize == 5) currentCircleSize = 50;
+  else currentCircleSize -= 1;
+  
+  if (dist(mouseX, mouseY, circleX, circleY) < currentCircleSize/2) {
     fill(CLICK_FILL_COLOR);
   }
   else {
     fill(NO_CLICK_FILL_COLOR);
   }
-  ellipse(circleX, circleY, CIRCLE_SIZE, CIRCLE_SIZE);
+  //changed by switching fixable variable CIRCLE_SIZE to flexiable variable currentCircleSize
+  ellipse(circleX, circleY, currentCircleSize, currentCircleSize); 
   circleX += circleVX;
   circleY += circleVY;
   if (circleX + CIRCLE_SIZE/2 > width || circleX - CIRCLE_SIZE/2 < 0) {
