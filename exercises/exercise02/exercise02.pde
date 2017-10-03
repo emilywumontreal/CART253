@@ -21,26 +21,34 @@ int ballSpeed = 5;
 int ballSize = 16;
 color ballColor = color(255);
 
-// setup function initializes the game window and call function setupPaddle and setupBall
+// function setup()
+//
+// initializes the game window and call function setupPaddle and setupBall
 void setup() {
   size(640, 480);
   setupPaddle();
   setupBall();
 }
-// setupPaddle function initailizes the pisition of paddle on the bottom middle of window
+// setupPaddle function
+//
+// initailizes the pisition of paddle on the bottom middle of window
 void setupPaddle() {
   paddleX = width/2;
   paddleY = height - paddleHeight;
   paddleVX = 0;
 }
-// setupBall function initailizes the position of ball in the midddle of window 
+// setupBall() function 
+// 
+// initailizes the position of ball in the midddle of window 
 void setupBall() {
   ballX = width/2;
   ballY = height/2;
   ballVX = ballSpeed;
   ballVY = ballSpeed;
 }
-// function draw is main function to paint background and call every funtion that has been designed below
+// function draw() 
+//
+// main function to paint background and call every funtion that has been designed below
 void draw() {
   background(backgroundColor);
 
@@ -52,7 +60,9 @@ void draw() {
   drawPaddle();
   drawBall();
 }
-// function drawStatic draws background random gains within the window 
+// function drawStatic()
+//
+// draws background random gains within the window 
 void drawStatic() {
   for (int i = 0; i < numStatic; i++) {
    float x = random(0,width);
@@ -62,12 +72,16 @@ void drawStatic() {
    rect(x,y,staticSize,staticSize);
   }
 }
-// function updatePaddle set the position of paddle within the window
+// function updatePaddle()
+//
+// set the position of paddle within the window
 void updatePaddle() {
   paddleX += paddleVX;  
   paddleX = constrain(paddleX,0+paddleWidth/2,width-paddleWidth/2);
 }
-// function updateBall setup the next position of ball and also call the functions that handle the situdations of ball: hiting the wall, hitting the paddle and hiting the bottom 
+// function updateBall()
+//
+// setup the next position of ball and also call the functions that handle the situdations of ball: hiting the wall, hitting the paddle and hiting the bottom 
 void updateBall() {
   ballX += ballVX;
   ballY += ballVY;
@@ -76,28 +90,38 @@ void updateBall() {
   handleBallHitWall();
   handleBallOffBottom();
 }
-// function drawPaddle draws paddle 
+// function drawPaddle()
+//
+//draws paddle 
 void drawPaddle() {
   rectMode(CENTER);
   noStroke();
   fill(paddleColor);
   rect(paddleX, paddleY, paddleWidth, paddleHeight);
 }
-// function drawBall as the meaning of function name draws real-time ball
+// function drawBall()
+//
+// as the meaning of function name draws real-time ball
 void drawBall() {
   rectMode(CENTER);
   noStroke();
   fill(ballColor);
   rect(ballX, ballY, ballSize, ballSize);
 }
-// fuction handleBallHitPaddle decides the direction of ball when ball hit the paddle relocated the ball by reduce the y-coodinate by 5
+// fuction handleBallHitPaddle()
+//
+//decides the direction of ball when ball hit the paddle relocated the ball by reduce the y-coodinate by 5
 void handleBallHitPaddle() {
   if (ballOverlapsPaddle()) {
     ballY = paddleY - paddleHeight/2 - ballSize/2;
     ballVY = -ballVY;
+    // CHANGED the color of ball to random color when it hits the paddle
+    ballColor = color(random(250), random(150), random(150));
   }
 }
-// function ballOverLapsPaddle return a true/false value to where call this function to decide if the ball touches the paddle 
+// function ballOverLapsPaddle()
+//
+// return a true/false value to where call this function to decide if the ball touches the paddle 
 boolean ballOverlapsPaddle() {
   if (ballX - ballSize/2 > paddleX - paddleWidth/2 && ballX + ballSize/2 < paddleX + paddleWidth/2) {
     if (ballY > paddleY - paddleHeight/2) {
@@ -106,7 +130,9 @@ boolean ballOverlapsPaddle() {
   }
   return false;
 }
-// function handleBallOffBottom setup the position of ball to the middle of window while the ball is off bottom.
+// function handleBallOffBottom()
+//
+// setup the position of ball to the middle of window while the ball is off bottom.
 void handleBallOffBottom() {
   if (ballOffBottom()) {
     ballX = width/2;
@@ -136,7 +162,7 @@ void handleBallHitWall() {
   // if the ball touches the top of window, set the position of ball to the opposite direction 
   if (ballY - ballSize/2 < 0) {
     ballY = 0 + ballSize/2;
-    ballVY -= ballVY;
+    ballVY = -ballVY;
   }
 }
 // while Left key is pressed and paddlke is not out of right wall, set the position of paddle to left
