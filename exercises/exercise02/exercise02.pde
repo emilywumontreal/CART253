@@ -20,6 +20,8 @@ int ballVY;
 int ballSpeed = 5;
 int ballSize = 16;
 color ballColor = color(255);
+// CHANGED adding a variable to count how many times that the ball hit the paddle
+int hitCount = 0;
 
 // function setup()
 //
@@ -83,12 +85,16 @@ void updatePaddle() {
 //
 // setup the next position of ball and also call the functions that handle the situdations of ball: hiting the wall, hitting the paddle and hiting the bottom 
 void updateBall() {
+  if (hitCount >= 3) {
+    setSpeedOfBall();
+  }
   ballX += ballVX;
   ballY += ballVY;
 
   handleBallHitPaddle();
   handleBallHitWall();
   handleBallOffBottom();
+  // CHANGED call new function setSpeedOfBall()
 }
 // function drawPaddle()
 //
@@ -106,7 +112,7 @@ void drawPaddle() {
     rect(tempX, paddleY, paddleWidth/10, paddleHeight);
     tempX += paddleWidth / 10;
   }
-  
+
   //rect(paddleX, paddleY, paddleWidth, paddleHeight);
 }
 // function drawBall()
@@ -122,12 +128,17 @@ void drawBall() {
 //
 //decides the direction of ball when ball hit the paddle relocated the ball by reduce the y-coodinate by 5
 void handleBallHitPaddle() {
+
   if (ballOverlapsPaddle()) {
-    ballY = paddleY - paddleHeight/2 - ballSize/2;
+    hitCount++;
+
+    // ballY = paddleY - paddleHeight/2 - ballSize/2;
     ballVY = -ballVY;
     // CHANGED the color of ball to random color when it hits the paddle
     ballColor = color(random(250), random(150), random(150));
   }
+  // CHANGED hitCount is added up when the ball hits the paddle
+  // hitCount++;
 }
 // function ballOverLapsPaddle()
 //
@@ -135,6 +146,7 @@ void handleBallHitPaddle() {
 boolean ballOverlapsPaddle() {
   if (ballX - ballSize/2 > paddleX - paddleWidth/2 && ballX + ballSize/2 < paddleX + paddleWidth/2) {
     if (ballY > paddleY - paddleHeight/2) {
+
       return true;
     }
   }
@@ -147,6 +159,11 @@ void handleBallOffBottom() {
   if (ballOffBottom()) {
     ballX = width/2;
     ballY = height/2;
+    //CHANGED reset hitCount to 0 
+    //println("balloffbottom be called");
+    hitCount = 0;
+    ballVX = ballSpeed;
+    ballVY = ballSpeed;
   }
 }
 // ballOffBottom()
@@ -189,5 +206,24 @@ void keyReleased() {
     paddleVX = 0;
   } else if (keyCode == RIGHT && paddleVX > 0) {
     paddleVX = 0;
+  }
+}  
+// CHANGED to add a new function
+// Function setSpeedOfBall()
+//
+// react to make the ball moveing faster. the speed of ball is going to be increased 1 plus after the ball hits the paddle over 3 times.
+// if the ball ever hit the ground, the countHit will be reseted to 0. 
+void setSpeedOfBall() {     
+  if (ballVX > 0) {
+    ballVX += 1;
+  }
+  else {
+    ballVX -= 1;
+  }
+   if (ballVY > 0) {
+    ballVY += 1;
+  }
+  else {
+    ballVY -= 1;
   }
 }
