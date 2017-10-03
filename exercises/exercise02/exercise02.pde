@@ -9,7 +9,7 @@ int paddleX;
 int paddleY;
 int paddleVX;
 int paddleSpeed = 10;
-int paddleWidth = 128;
+int paddleWidth = 120;
 int paddleHeight = 16;
 color paddleColor = color(135);
 
@@ -65,11 +65,11 @@ void draw() {
 // draws background random gains within the window 
 void drawStatic() {
   for (int i = 0; i < numStatic; i++) {
-   float x = random(0,width);
-   float y = random(0,height);
-   float staticSize = random(staticSizeMin,staticSizeMax);
-   fill(staticColor);
-   rect(x,y,staticSize,staticSize);
+    float x = random(0, width);
+    float y = random(0, height);
+    float staticSize = random(staticSizeMin, staticSizeMax);
+    fill(staticColor);
+    rect(x, y, staticSize, staticSize);
   }
 }
 // function updatePaddle()
@@ -77,7 +77,7 @@ void drawStatic() {
 // set the position of paddle within the window
 void updatePaddle() {
   paddleX += paddleVX;  
-  paddleX = constrain(paddleX,0+paddleWidth/2,width-paddleWidth/2);
+  paddleX = constrain(paddleX, 0+paddleWidth/2, width-paddleWidth/2);
 }
 // function updateBall()
 //
@@ -85,7 +85,7 @@ void updatePaddle() {
 void updateBall() {
   ballX += ballVX;
   ballY += ballVY;
-  
+
   handleBallHitPaddle();
   handleBallHitWall();
   handleBallOffBottom();
@@ -94,10 +94,20 @@ void updateBall() {
 //
 //draws paddle 
 void drawPaddle() {
-  rectMode(CENTER);
+  rectMode(CORNER);
   noStroke();
   fill(paddleColor);
-  rect(paddleX, paddleY, paddleWidth, paddleHeight);
+  // CHANGED draw colorful paddle with 10 random colors
+  color colorPaddle;
+  int tempX = paddleX - paddleWidth/2;
+  for (int i = 0; i < 10; i++) {
+    colorPaddle = color(random(250), random(150), random(150));
+    fill(colorPaddle);
+    rect(tempX, paddleY, paddleWidth/10, paddleHeight);
+    tempX += paddleWidth / 10;
+  }
+  
+  //rect(paddleX, paddleY, paddleWidth, paddleHeight);
 }
 // function drawBall()
 //
@@ -154,7 +164,7 @@ void handleBallHitWall() {
   if (ballX - ballSize/2 < 0) {
     ballX = 0 + ballSize/2;
     ballVX = -ballVX;
-  // if the ball touches the right wall of the screen, set the ball to the left
+    // if the ball touches the right wall of the screen, set the ball to the left
   } else if (ballX + ballSize/2 > width) {
     ballX = width - ballSize/2;
     ballVX = -ballVX;
