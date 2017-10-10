@@ -61,17 +61,17 @@ class Ball {
       vy = -vy;
     }
   }
-  
+
   // reset()
   //
   // Resets the ball to the centre of the screen.
   // Note that it KEEPS its velocity
-  
+
   void reset() {
     x = width/2;
     y = height/2;
   }
-  
+
   // isOffScreen()
   //
   // Returns true if the ball is off the left or right side of the window
@@ -79,9 +79,18 @@ class Ball {
   // (If we wanted to return WHICH side it had gone off, we'd have to return
   // something like an int (e.g. 0 = not off, 1 = off left, 2 = off right)
   // or a String (e.g. "ON SCREEN", "OFF LEFT", "OFF RIGHT")
-  
+
   boolean isOffScreen() {
-    return (x + SIZE/2 < 0 || x - SIZE/2 > width);
+    //CHANGED reset score when the ball is off the screen
+    if (x + SIZE/2 < 0) {
+      winner = 'R';
+      return true;
+    }
+    if (x - SIZE/2 > width) {
+      winner = 'L';
+      return true;    
+    } 
+      return false;
   }
 
   // collide(Paddle paddle)
@@ -96,7 +105,7 @@ class Ball {
     boolean insideRight = (x - SIZE/2 < paddle.x + paddle.WIDTH/2);
     boolean insideTop = (y + SIZE/2 > paddle.y - paddle.HEIGHT/2);
     boolean insideBottom = (y - SIZE/2 < paddle.y + paddle.HEIGHT/2);
-    
+
     // Check if the ball overlaps with the paddle
     if (insideLeft && insideRight && insideTop && insideBottom) {
       // If it was moving to the left
@@ -109,6 +118,8 @@ class Ball {
       }
       // And make it bounce
       vx = -vx;
+      //CHANGED counting variable plus 1
+      score +=1;
     }
   }
 

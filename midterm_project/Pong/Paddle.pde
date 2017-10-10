@@ -12,12 +12,13 @@ class Paddle {
   int HEIGHT = 70;
   int WIDTH = 16;
 
+
   // The position and velocity of the paddle (note that vx isn't really used right now)
   int x;
   int y;
   int vx;
   int vy;
-  
+
   // The fill color of the paddle
   color paddleColor = color(255);
 
@@ -56,19 +57,19 @@ class Paddle {
     y += vy;
 
     // Constrain the paddle's y position to be in the window
-    y = constrain(y,0 + HEIGHT/2,height - HEIGHT/2);
+    y = constrain(y, 0 + HEIGHT/2, height - HEIGHT/2);
   }
 
   // display()
   //
   // Display the paddle at its location
-  
+
   void display() {
     // Set display properties
     noStroke();
     fill(paddleColor);
     rectMode(CENTER);
-    
+
     // Draw the paddle as a rectangle
     rect(x, y, WIDTH, HEIGHT);
   }
@@ -76,9 +77,10 @@ class Paddle {
   // keyPressed()
   //
   // Called when keyPressed is called in the main program
-  
+
   void keyPressed() {
     // Check if the key is our up key
+
     if (key == upKey) {
       // If so we want a negative y velocity
       vy = -SPEED;

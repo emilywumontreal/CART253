@@ -1,4 +1,4 @@
-// Pong
+// Pong //<>//
 //
 // A simple version of Pong using object-oriented programming.
 // Allows to people to bounce a ball back and forth between
@@ -19,6 +19,15 @@ int PADDLE_INSET = 8;
 
 // The background colour during play (black)
 color backgroundColor = color(0);
+
+//CHANGED adding variable score to identify how many times the ball has been bouncing before the game is over( while the ball get off the left or right of window )
+int score = 0;
+//CHANGED adding a variable isGameOver to decide if the game is over
+int isGameOver = 0;
+int gameOver = 5;
+//CHANGED adding a variable score to identyify the winner
+char winner = 'U';
+
 
 
 // setup()
@@ -49,26 +58,34 @@ void setup() {
 void draw() {
   // Fill the background each frame so we have animation
   background(backgroundColor);
+  //CHANGED adding a condition that game is over or not
+  if (isGameOver <= gameOver) {
+    // Update the paddles and ball by calling their update methods
+    leftPaddle.update();
+    rightPaddle.update();
+    ball.update();
 
-  // Update the paddles and ball by calling their update methods
-  leftPaddle.update();
-  rightPaddle.update();
-  ball.update();
+    // Check if the ball has collided with either paddle
+    ball.collide(leftPaddle);
+    ball.collide(rightPaddle);
 
-  // Check if the ball has collided with either paddle
-  ball.collide(leftPaddle);
-  ball.collide(rightPaddle);
+    // Check if the ball has gone off the screen
+    if (ball.isOffScreen()) {
+      // If it has, reset the ball
+      ball.reset();
+      //CHANGED reset score as 0 when the ball is off the screen and isGameOver plus 1 (if isGameOver is greater than 5, game is over)
+      score = 0;
+      isGameOver +=1;
+    }
 
-  // Check if the ball has gone off the screen
-  if (ball.isOffScreen()) {
-    // If it has, reset the ball
-    ball.reset();
+    // Display the paddles and the ball
+    leftPaddle.display();
+    rightPaddle.display();
+    ball.display();
+    showScore();
+  } else {
+    gameOver();
   }
-
-  // Display the paddles and the ball
-  leftPaddle.display();
-  rightPaddle.display();
-  ball.display();
 }
 
 // keyPressed()
@@ -91,4 +108,23 @@ void keyReleased() {
   // Call both paddles' keyReleased methods
   leftPaddle.keyReleased();
   rightPaddle.keyReleased();
+}
+
+// CHANGED adding a function to show score in the background
+void showScore() {
+  fill(255, 0, 0);
+  textAlign(CENTER, CENTER);
+  textSize(50);
+  text(score, ball.x + ball.SIZE, ball.y + ball.SIZE);
+  //println("score is ", score);
+}
+// CHANGED adding a function that paint "Game over" window
+void gameOver() {
+  fill(0, 255, 0);
+  textAlign(CENTER, CENTER);
+  
+  text("GAME OVER", width/2, height/2);
+  fill(0, 255, 255);
+  textSize(50);
+  text(winner+" PLAYER WON",width/2, height/2-80);
 }
