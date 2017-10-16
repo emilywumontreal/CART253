@@ -21,15 +21,15 @@ int PADDLE_INSET = 8;
 color backgroundColor = color(0);
 
 //CHANGED adding variable score to identify how many times the ball has been bouncing before the game is over( while the ball get off the left or right of window )
-int score = 0;
+int scorePlayer1 = 0;
+int scorePlayer2 = 0;
 //CHANGED adding a variable isGameOver to decide if the game is over
-int isGameOver = 0;
-int gameOver = 5;
+
+int isGameOver = 10;
 //CHANGED adding a variable score to identyify the winner
-char winner = 'U';
+String winner = "Player";
 
-
-
+PImage imgBackground;
 // setup()
 //
 // Sets the size and creates the paddles and ball
@@ -37,7 +37,10 @@ char winner = 'U';
 void setup() {
   // Set the size
   size(640, 480);
-
+  // CHANGED background picture
+  imgBackground = loadImage("images/background.jpg");
+  imgBackground.resize(640, 480);
+  background(imgBackground);
   // Create the paddles on either side of the screen. 
   // Use PADDLE_INSET to to position them on x, position them both at centre on y
   // Also pass through the two keys used to control 'up' and 'down' respectively
@@ -57,9 +60,12 @@ void setup() {
 
 void draw() {
   // Fill the background each frame so we have animation
-  background(backgroundColor);
+  background(imgBackground);
+  
   //CHANGED adding a condition that game is over or not
-  if (isGameOver <= gameOver) {
+  if (scorePlayer1 < isGameOver && scorePlayer2 < isGameOver) {
+    //  println("scoreplayer1=",scorePlayer1);
+    //  println("scoreplayer2=",scorePlayer2);
     // Update the paddles and ball by calling their update methods
     leftPaddle.update();
     rightPaddle.update();
@@ -73,9 +79,8 @@ void draw() {
     if (ball.isOffScreen()) {
       // If it has, reset the ball
       ball.reset();
-      //CHANGED reset score as 0 when the ball is off the screen and isGameOver plus 1 (if isGameOver is greater than 5, game is over)
-      score = 0;
-      isGameOver +=1;
+
+      //isGameOver +=1;
     }
 
     // Display the paddles and the ball
@@ -112,19 +117,26 @@ void keyReleased() {
 
 // CHANGED adding a function to show score in the background
 void showScore() {
-  fill(255, 0, 0);
+  fill(255, 255, 0);
   textAlign(CENTER, CENTER);
-  textSize(50);
-  text(score, ball.x + ball.SIZE, ball.y + ball.SIZE);
+  textSize(40);
+  text(scorePlayer1, ball.x, ball.y + ball.SIZE);
+
+  fill(0, 255, 255);
+  text(scorePlayer2, ball.x + ball.SIZE, ball.y + ball.SIZE);
   //println("score is ", score);
 }
 // CHANGED adding a function that paint "Game over" window
 void gameOver() {
   fill(0, 255, 0);
   textAlign(CENTER, CENTER);
-  
+
   text("GAME OVER", width/2, height/2);
   fill(0, 255, 255);
   textSize(50);
-  text(winner+" PLAYER WON",width/2, height/2-80);
+  text(winner+" WON!", width/2, height/2-80);
 }
+
+// CHANGED the look of PONG game, change the background and the skin of ball
+//void setGameLooks() {
+//}

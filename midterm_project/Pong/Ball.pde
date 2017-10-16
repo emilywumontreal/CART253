@@ -9,7 +9,7 @@ class Ball {
 
   // Default values for speed and size
   int SPEED = 5;
-  int SIZE = 16;
+  int SIZE = 96;
 
   // The location of the ball
   int x;
@@ -21,6 +21,9 @@ class Ball {
 
   // The colour of the ball
   color ballColor = color(255);
+
+  // CHANGED the look of the ball
+  PImage imgBall;
 
 
   /////////////// Constructor ///////////////
@@ -83,14 +86,16 @@ class Ball {
   boolean isOffScreen() {
     //CHANGED reset score when the ball is off the screen
     if (x + SIZE/2 < 0) {
-      winner = 'R';
+      winner = "Player2";
+      scorePlayer2 +=1;
       return true;
     }
     if (x - SIZE/2 > width) {
-      winner = 'L';
-      return true;    
+      winner = "Player1";
+      scorePlayer1 +=1;
+      return true;
     } 
-      return false;
+    return false;
   }
 
   // collide(Paddle paddle)
@@ -119,7 +124,7 @@ class Ball {
       // And make it bounce
       vx = -vx;
       //CHANGED counting variable plus 1
-      score +=1;
+      //score +=1;
     }
   }
 
@@ -134,6 +139,25 @@ class Ball {
     rectMode(CENTER);
 
     // Draw the ball
-    rect(x, y, SIZE, SIZE);
+    //rect(x, y, SIZE, SIZE);  
+    //CHANGED the look of ball and transparency when the score goes higher
+    imgBall = loadImage("images/redsphere.jpeg");
+    print("size= "+SIZE);
+    print(" isGameOver/2= "+isGameOver/2);
+    print(" scorePlayer1= "+ scorePlayer1);
+    println(" scorePlayer2= "+ scorePlayer2);
+    imgBall.resize(SIZE, SIZE);
+    
+    if (scorePlayer1 == isGameOver/3 || scorePlayer2 == isGameOver/3) {
+      tint(255, 256/2);
+      //SIZE = SIZE/2;
+    } 
+    if (scorePlayer1 == isGameOver/2 || scorePlayer2 == isGameOver/2) {
+      tint(255, 256/3);
+      //SIZE = SIZE/3;
+    }
+    //tint(255,126);
+    imageMode(CENTER);
+    image(imgBall, x, y);
   }
 }
