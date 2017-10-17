@@ -28,8 +28,11 @@ int scorePlayer2 = 0;
 int isGameOver = 10;
 //CHANGED adding a variable score to identyify the winner
 String winner = "Player";
-
+// CHANGED add background of the game
 PImage imgBackground;
+
+// CHANGED add a variable controlFlagOfPaddle to decide which paddle is avaliable when the mouse pressed
+char controlFlagOfPaddle = 'L';
 // setup()
 //
 // Sets the size and creates the paddles and ball
@@ -61,7 +64,7 @@ void setup() {
 void draw() {
   // Fill the background each frame so we have animation
   background(imgBackground);
-  
+
   //CHANGED adding a condition that game is over or not
   if (scorePlayer1 < isGameOver && scorePlayer2 < isGameOver) {
     //  println("scoreplayer1=",scorePlayer1);
@@ -115,25 +118,44 @@ void keyReleased() {
   rightPaddle.keyReleased();
 }
 
-// CHANGED adding a function to show score in the background
+// CHANGED add a function to check if mouse is pressed and the mouseX is left half of the window. then redraw the left paddle, otherwise redraw the rightpaddle
+void mousePressed() {
+  if (mouseX >= width/2) {
+    controlFlagOfPaddle = 'R';
+  } else 
+  {
+    controlFlagOfPaddle = 'L';
+  }
+  if (controlFlagOfPaddle == 'L') 
+    leftPaddle.mousePressed();
+  else 
+  rightPaddle.mousePressed();
+}
+// CHANGED 
+// showScore()
+//
+// adding a function to show score beside of the ball
 void showScore() {
   fill(255, 255, 0);
   textAlign(CENTER, CENTER);
-  textSize(40);
-  text(scorePlayer1, ball.x, ball.y + ball.SIZE);
+  textSize(25);
+  text(scorePlayer1, ball.x, ball.y + ball.SIZE/2);
 
   fill(0, 255, 255);
-  text(scorePlayer2, ball.x + ball.SIZE, ball.y + ball.SIZE);
-  //println("score is ", score);
+  textAlign(CENTER, CENTER);
+  text(scorePlayer2, ball.x+ball.SIZE/2, ball.y + ball.SIZE/2);
 }
-// CHANGED adding a function that paint "Game over" window
+
+// CHANGED 
+// function gameOver
+//
+// adding a function that paint "Game over" window
 void gameOver() {
   fill(0, 255, 0);
   textAlign(CENTER, CENTER);
-
   text("GAME OVER", width/2, height/2);
-  fill(0, 255, 255);
-  textSize(50);
+  fill(0, 255, 0);
+  textSize(25);
   text(winner+" WON!", width/2, height/2-80);
 }
 

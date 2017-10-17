@@ -20,7 +20,7 @@ class Paddle {
   int vy;
 
   // The fill color of the paddle
-  color paddleColor = color(255);
+  color paddleColor = color(165,17,3);
 
   // The characters used to make the paddle move up and down, defined in constructor
   char upKey;
@@ -66,7 +66,7 @@ class Paddle {
 
   void display() {
     // Set display properties
-    noStroke();
+    //noStroke();
     fill(paddleColor);
     rectMode(CENTER);
 
@@ -105,5 +105,10 @@ class Paddle {
       // If so it should stop
       vy = 0;
     }
+  }
+  // CHANGED when mouse pressed, draw the paddle to where the mouse is 
+  void mousePressed() {
+     y = mouseY;
+
   }
 }

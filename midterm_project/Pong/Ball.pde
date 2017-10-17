@@ -9,15 +9,15 @@ class Ball {
 
   // Default values for speed and size
   int SPEED = 5;
-  int SIZE = 96;
+  int SIZE = 60;
 
   // The location of the ball
   int x;
   int y;
 
   // The velocity of the ball
-  int vx;
-  int vy;
+  float vx;
+  float vy;
 
   // The colour of the ball
   color ballColor = color(255);
@@ -40,8 +40,17 @@ class Ball {
   Ball(int _x, int _y) {
     x = _x;
     y = _y;
-    vx = SPEED;
-    vy = SPEED;
+    //vx = SPEED;
+    //vy = SPEED;
+    vx = floor(random(-10, 10));
+    vy = floor(random(-10, 10));
+    //if (vy == 0) vy +=1;
+    // if (vx == 0) vx +=1;
+    if (dist(vx, 0, 0, vy) < SPEED) 
+    {
+      vx = SPEED;
+      vy = SPEED;
+    }
   }
 
 
@@ -55,8 +64,16 @@ class Ball {
 
   void update() {
     // First update the location based on the velocity (so the ball moves)
+    //x += vx;
+    //y += vy;
+    //x += random(width/2);
+    //y += random(height/2);
+
+
     x += vx;
     y += vy;
+    // println("x= "+x);
+    // println("y= "+y);
 
     // Check if the ball is going off the top of bottom
     if (y - SIZE/2 < 0 || y + SIZE/2 > height) {
@@ -128,6 +145,7 @@ class Ball {
     }
   }
 
+
   // display()
   //
   // Draw the ball at its position
@@ -136,28 +154,22 @@ class Ball {
     // Set up the appearance of the ball (no stroke, a fill, and rectMode as CENTER)
     noStroke();
     fill(ballColor);
-    rectMode(CENTER);
-
+    //rectMode(CENTER);
+    //CHANGED imageMode to center
+    imageMode(CENTER);
     // Draw the ball
-    //rect(x, y, SIZE, SIZE);  
+    //rect(x, y, SIZE, SIZE); 
+
     //CHANGED the look of ball and transparency when the score goes higher
-    imgBall = loadImage("images/redsphere.jpeg");
-    print("size= "+SIZE);
-    print(" isGameOver/2= "+isGameOver/2);
-    print(" scorePlayer1= "+ scorePlayer1);
-    println(" scorePlayer2= "+ scorePlayer2);
+    imgBall = loadImage("images/redsphere.png");
     imgBall.resize(SIZE, SIZE);
-    
-    if (scorePlayer1 == isGameOver/3 || scorePlayer2 == isGameOver/3) {
-      tint(255, 256/2);
-      //SIZE = SIZE/2;
-    } 
+    image(imgBall, x, y);
+    // while the score is half of the full score, tint the color of the ball and reduce the size of the ball as well
     if (scorePlayer1 == isGameOver/2 || scorePlayer2 == isGameOver/2) {
       tint(255, 256/3);
-      //SIZE = SIZE/3;
+      if (SIZE/3 >= 20) {
+        SIZE = SIZE/2;
+      }
     }
-    //tint(255,126);
-    imageMode(CENTER);
-    image(imgBall, x, y);
   }
 }
