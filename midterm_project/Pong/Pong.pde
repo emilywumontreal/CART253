@@ -152,12 +152,14 @@ void mousePressed() {
 void showScore() {
   fill(255, 255, 0);
   textAlign(CENTER, CENTER);
-  textSize(25);
-  text(scorePlayer1, ball.x, ball.y + ball.SIZE/2);
+  if (ball.SIZE/3 <=20)  textSize(20);
+  else textSize(ball.SIZE/3);
+  
+  text(scorePlayer1, ball.x-ball.SIZE/4, ball.y + ball.SIZE/2);
 
   fill(0, 255, 255);
   textAlign(CENTER, CENTER);
-  text(scorePlayer2, ball.x+ball.SIZE/2, ball.y + ball.SIZE/2);
+  text(scorePlayer2, ball.x+ball.SIZE/4, ball.y + ball.SIZE/2);
 }
 
 // CHANGED 

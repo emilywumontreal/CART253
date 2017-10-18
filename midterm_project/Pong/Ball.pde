@@ -41,14 +41,11 @@ class Ball {
     x = _x;
     y = _y;
 
-    vx = round(random(-15, 15));
-    vy = round(random(-15, 15));
-    println("vx="+vx+"; vy="+vy);  
- /*   if ((abs(vx) < abs(vy)) || (abs(abs(vx)-abs(vy)) < SPEED)) 
-    {
-      vx = SPEED;
-      vy = SPEED;
-    }*/
+    vx = round(random(-10, 10));
+    vy = round(random(-10, 10));
+    //println("vx="+vx+"; vy="+vy);  
+    if (abs(vx) < 3) vx = SPEED;
+    if (abs(vy)<3 ) vy = SPEED;
   }
 
 
