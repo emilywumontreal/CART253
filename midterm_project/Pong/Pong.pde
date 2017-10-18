@@ -5,8 +5,8 @@
 // two paddles that they control.
 //
 // scoring:
-// the finishing score will be 10. In this case finishing score is setted by giving value to the variable isGameOver.
-// if the ball is off of screen on the left side then the player on the right side win one point. vice versa
+// the winning score will be 10. In this case winning score is setted by giving value to the variable isGameOver.
+// if the ball is off screen on the left side(mouseX<width/2), right side player wins one point. vice versa
 // whoever fristly get the 10 points, this player will be the winner. 
 // 
 // score display:
