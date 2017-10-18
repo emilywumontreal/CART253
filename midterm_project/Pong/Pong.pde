@@ -4,11 +4,25 @@
 // Allows to people to bounce a ball back and forth between
 // two paddles that they control.
 //
-// No scoring. (Yet!)
-// No score display. (Yet!)
-// Pretty ugly. (Now!)
-// Only two paddles. (So far!)
+// scoring:
+// the finishing score will be 10. In this case finishing score is setted by giving value to the variable isGameOver.
+// if the ball is off of screen on the left side then the player on the right side win one point. vice versa
+// whoever fristly get the 10 points, this player will be the winner. 
+// 
+// score display:
+// two players have their own scores showing under the ball
+// 
+// the looks of game:
+// changed the looks of the background and the ball and the paddle. 
+// when the score is half way of the full score, the ball will be transparant and the size will be reduce to 1/2 original size
+// 
 
+// the way of controling two paddles:
+// save the original way of controlling the paddle and also added a new way to control by clicking the mouse. when 
+// the mouse pressed on the right side of the window, the right paddle is working. vice versa. 
+
+// the way of setting the move of the ball
+// setting a random vx&vy from -10 to 10 while the ball has been created by the construction method of class Ball.
 // Global variables for the paddles and the ball
 Paddle leftPaddle;
 Paddle rightPaddle;

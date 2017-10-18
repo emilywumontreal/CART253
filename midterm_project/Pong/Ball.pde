@@ -40,17 +40,15 @@ class Ball {
   Ball(int _x, int _y) {
     x = _x;
     y = _y;
-    //vx = SPEED;
-    //vy = SPEED;
-    vx = floor(random(-10, 10));
-    vy = floor(random(-10, 10));
-    //if (vy == 0) vy +=1;
-    // if (vx == 0) vx +=1;
-    if (dist(vx, 0, 0, vy) < SPEED) 
+
+    vx = round(random(-15, 15));
+    vy = round(random(-15, 15));
+    println("vx="+vx+"; vy="+vy);  
+ /*   if ((abs(vx) < abs(vy)) || (abs(abs(vx)-abs(vy)) < SPEED)) 
     {
       vx = SPEED;
       vy = SPEED;
-    }
+    }*/
   }
 
 
