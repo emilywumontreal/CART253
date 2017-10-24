@@ -8,8 +8,12 @@
 
 // The size of a single grid element
 int gridSize = 20;
+// the size of a single bubble element
+int bubbleSize = 10;
 // An array storing all the griddies
 Griddie[] griddies = new Griddie[100];
+Bubble[] bubbles = new Bubble[100];
+
 
 // setup()
 //
@@ -21,10 +25,19 @@ void setup() {
   frameRate(10);
 
   // QUESTION: What does this for loop do?
+  // this for loop create 100 griddies by setting a random location for each of them.
   for (int i = 0; i < griddies.length; i++) {
     int x = floor(random(0, width/gridSize));
+    //println(x);
     int y = floor(random(0, height/gridSize));
     griddies[i] = new Griddie(x * gridSize, y * gridSize, gridSize);
+  }
+
+  // CHANGED adding a bubble object array
+  for (int i = 0; i < bubbles.length; i++) {
+    int x = floor(random(0, width/bubbleSize));
+    int y = floor(random(0, height/bubbleSize));
+    bubbles[i] = new Bubble(x * bubbleSize, y * bubbleSize, bubbleSize);
   }
 }
 
@@ -44,13 +57,34 @@ void draw() {
     // Now go through all the griddies a second time...
     for (int j = 0; j < griddies.length; j++) {
       // QUESTION: What is this if-statement for?
+      // this statement checks if the griddie are not comparing with themselves, if so, go run next loop
       if (j != i) {
-        // QUESTION: What does this line check?
-        griddies[i].collide(griddies[j]);
+      // QUESTION: What does this line check?
+      // this line checks if the enery need to be increased or stay the same.
+      griddies[i].collide(griddies[j]);
       }
     }
-    
+
     // Display the griddies
     griddies[i].display();
+  }
+
+  // We need to loop through all the bubbles one by one
+  for (int i = 0; i < bubbles.length; i++) {
+
+    // Update the griddies
+    bubbles[i].update();
+
+    // Now go through all the bubble a second time...
+    for (int j = 0; j < bubbles.length; j++) {
+
+      if (j != i) {
+
+        bubbles[i].collide(bubbles[j]);
+      }
+    }
+
+    // Display the griddies
+    bubbles[i].display();
   }
 }

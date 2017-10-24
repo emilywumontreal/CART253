@@ -1,11 +1,11 @@
-// Griddie
+// Bubble
 //
 // A class defining the behaviour of a single Griddie
 // which can move randomly in the window (within the grid),
 // loses energy per move, and gains energy from overlapping
 // with another Griddie.
 
-class Griddie {
+class Bubble {
   // Limits for energy level and gains/losses
   int maxEnergy = 255;
   int moveEnergy = -1;
@@ -16,13 +16,13 @@ class Griddie {
   int y;
   int size;
   int energy;
-  color fill = color(255,0,0);
+  color fill = color(167,255,0);
 
   // Griddie(tempX, tempY, tempSize)
   //
   // Set up the Griddie with the specified location and size
   // Initialise energy to the maximum
-  Griddie(int tempX, int tempY, int tempSize) {
+  Bubble(int tempX, int tempY, int tempSize) {
     x = tempX;
     y = tempY;
     size = tempSize;
@@ -35,22 +35,17 @@ class Griddie {
   void update() {
     
     // QUESTION: What is this if-statement for?
-    // if the energy of griddie runs out, do nothing and return to main program
     if (energy == 0) {
       return;
     }
     
     // QUESTION: How does the Griddie movement updating work?
-    // the values of xMoveType are -1, 0, 1, so do yMoveType. this means that each time update function runs, 
-    //the position of the griddie will be shake between one time of its size on left or one time of its size on right or stay the same place 
     int xMoveType = floor(random(-1,2));
-    //println(xMoveType);
     int yMoveType = floor(random(-1,2));
     x += size * xMoveType;
     y += size * yMoveType;
     
-    // QUESTION: What are these if statements doing?
-    // if the object is out of window make the object appears from the other side of window. 
+   
     if (x < 0) {
       x += width;
     }
@@ -77,15 +72,14 @@ class Griddie {
   // Checks for collision with the other Griddie
   // and updates energy level
   
-  void collide(Griddie other) {
-    // QUESTION: What is this if-statement for?
-    // this checks if either of the griddies run out of energy, if so, do nothing and return handler to the main program.
+  void collide(Bubble other) {
+  
     if (energy == 0 || other.energy == 0) {
       return;
     }
     
     // QUESTION: What does this if-statement check?
-    // this if-statement is checking if two objects are overlapping together, if so increase energy step by 10
+    // this statement check if two 
     if (x == other.x && y == other.y) {
       // Increase this Griddie's energy
       energy += collideEnergy;
@@ -98,10 +92,9 @@ class Griddie {
   //
   // Draw the Griddie on the screen as a rectangle
   void display() {
-    // QUESTION: What does this fill line do?
-    // this fill line is changing color of the griddie to more opacity or transparent depanding on the energy value.
+    
     fill(fill, energy); 
     noStroke();
-    rect(x, y, size, size);
+    ellipse(x, y, size, size);
   }
 }
