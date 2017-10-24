@@ -1,14 +1,14 @@
 // Bubble
 //
-// A class defining the behaviour of a single Griddie
+// A class defining the behaviour of a single Bubble
 // which can move randomly in the window (within the grid),
 // loses energy per move, and gains energy from overlapping
-// with another Griddie.
+// with another Bubble.
 
 class Bubble {
   // Limits for energy level and gains/losses
   int maxEnergy = 255;
-  int moveEnergy = -1;
+  int moveEnergy = 20;
   int collideEnergy = 10;
   
   // Position, size, energy, and fill color
@@ -34,7 +34,7 @@ class Bubble {
   // Move the Griddie and update its energy levels
   void update() {
     
-    // QUESTION: What is this if-statement for?
+    
     if (energy == 0) {
       return;
     }
@@ -78,8 +78,7 @@ class Bubble {
       return;
     }
     
-    // QUESTION: What does this if-statement check?
-    // this statement check if two 
+
     if (x == other.x && y == other.y) {
       // Increase this Griddie's energy
       energy += collideEnergy;
