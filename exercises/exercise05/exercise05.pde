@@ -23,7 +23,7 @@ void draw() {
     float y = height * noise(ty);
     // CHANGED making a random stroke color for the ellipse
     float n = noise(x/width, y/height);
-    println(n);
+    //println(n);
     color c = color(n * 255);
     fill(c);
     ellipse(x, y, 20, 20);
