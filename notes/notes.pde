@@ -63,6 +63,19 @@
   if key == 'x' 
   (millis() - startTime)/1000
   
+  Nov 6th notes:
   
+    tones[] = song[songIndex];
+songindex = (songindex + 1) % song.length;
+sine.freq(440);
+sine.freq(map(mousex,0,width,1,880));
+SawOsc 
+PinkNoise(this);
+music generator?
+WhiteNoise(this);
+new SinOsc(this);
+
+script src = processing.min.org
+<canvas data-procesing-sources = "Pond.pde Paddle.pde Ball.pde"
 
 */
