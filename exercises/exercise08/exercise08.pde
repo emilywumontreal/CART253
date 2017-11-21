@@ -10,8 +10,9 @@ int bands = 32;
 // define an Gif object
 Gif loopingGif;
 // define the default location of gif object
-int x = width/2;
+int x = 0;
 int y = height - 100;
+int vx = 1;
 
 void setup() {
   size(512, 360);
@@ -40,12 +41,27 @@ void draw() {
   fft.analyze();
   for (int i = 0; i < fft.size(); i++) {
     float y = map(fft.spectrum[i], 0, 0.5, height * 0.75, 0);
-    println("y= "+ y);
+   println("y= "+ y);
     noStroke();
     fill(int(200/bands)*i);
     rect((width/bands)*i, y, (width/bands)*(i+1), height);
-    if (y < 269.9 || y > 269.7) {
-      image(loopingGif, x, height - y);
-    }
+    // adding 
+    // if (y * 10 % 2600 <= 99 || y * 10 % 2600 >= 60) {
+
+    println("cat location y is ", int(abs(y*10 % 2600 - height)));
+    println("cat location x is ", x); //int(x*10 %2600
+   
+    //  } else if (y * 10 % 2600 <= 59 || y * 10 % 2600 >= 30) {
+    //image(loopingGif, x, height - y*10 % 2600);
+    //  }
+    
+   
+    
   }
+   if (x < width && x > 0) {
+     x += vx;
+    } else x = 0; //loopingGif.width/2; 
+    
+        image(loopingGif, x, y);
+
 }
