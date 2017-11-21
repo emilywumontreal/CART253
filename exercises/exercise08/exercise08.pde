@@ -62,6 +62,6 @@ void draw() {
      x += vx;
     } else x = 0; //loopingGif.width/2; 
     
-        image(loopingGif, x, y);
+        image(loopingGif, x, 250);
 
 }
