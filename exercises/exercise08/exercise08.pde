@@ -66,11 +66,3 @@ void draw() {
   y += vy;
   image(loopingGif, x, y);
 }
-
-/*
- void draw() {
- background(0);
- rectMode(CENTER);
- rect(x,y,size,size);
- }
- */
