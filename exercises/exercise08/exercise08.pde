@@ -43,12 +43,12 @@ void draw() {
   float level = mic.mix.level();
 
   println(level);
-  // Adding variable level to adjust the height of jumping
- if (level < 0.1) index = 1;
+  // Adding variable level to adjust the height of cat jumping
+  if (level < 0.1) index = 1;
   if (level > 0.1 && level <0.2) index = 2;
   if (level > 0.2 && level <0.3) index = 4;
   if (level > 0.3 && level <0.4) index = 6;
-  
+  if (level > 0.5 && level <0.9) index = 8;
   println("index=", index);
   if (!jumping&& level > 0.1) {
     vy = -10;
