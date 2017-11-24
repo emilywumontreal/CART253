@@ -5,7 +5,7 @@ import ddf.minim.*;
 
 Minim minim;
 AudioInput mic;
-int size = 100;
+int size = 60;
 
 int bands = 32;
 
@@ -13,7 +13,7 @@ int bands = 32;
 Gif loopingGif;
 // define the default location of gif object
 int x = 0;
-int y = height - 100;
+int y = height - size/2;
 int vx = 1;
 int vy = 1;
 boolean jumping = false;
@@ -23,10 +23,11 @@ int rate = 2;
 
 // Adding stone on the screen
 // An array storing all the stones
-Stone[] stones = new Stone[100];
-int stoneSize = 100;
+Stone[] stones = new Stone[10];
+int stoneSize = 60;
 boolean gameOver = false;
 int score = 0;
+boolean overlap = false;
 
 void setup() {
   size(924, 468);
@@ -39,7 +40,7 @@ void setup() {
 
 
   //Changed framerate
-  frameRate(20);
+  frameRate(30);
   //create the GifAnimation object
   imageMode(CORNER);
   loopingGif = new Gif(this, "rollingcat-maker.gif");
@@ -48,9 +49,10 @@ void setup() {
 
   // inisialize all 100 stones 
   for (int i = 0; i < stones.length; i++) {
-    int x = floor(random(0, width/stoneSize));
-    int y = floor(random(0, height/stoneSize));
-    stones[i] = new Stone(x * stoneSize, y * stoneSize, stoneSize);
+    //int x = floor(random(0, width/stoneSize));
+    int x = width+100 +(i*100);
+   // int y = floor(random(0, height/stoneSize));
+    stones[i] = new Stone(x , height-size , stoneSize);
   }
 }
 
@@ -88,35 +90,3 @@ void draw() {
     stones[i].update();
   }
 }
-
-
-/*
-
- // draw()
- //
- // Update all the griddies, check for collisions between them, display them.
- 
- void draw() {
- background(50);
- 
- // We need to loop through all the griddies one by one
- for (int i = 0; i < griddies.length; i++) {
- 
- // Update the griddies
- griddies[i].update();
- 
- // Now go through all the griddies a second time...
- for (int j = 0; j < griddies.length; j++) {
- // QUESTION: What is this if-statement for?
- if (j != i) {
- // QUESTION: What does this line check?
- griddies[i].collide(griddies[j]);
- }
- }
- 
- // Display the griddies
- griddies[i].display();
- }
- }
- 
- */
