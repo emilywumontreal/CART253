@@ -1,4 +1,4 @@
-import processing.sound.*;
+//import processing.sound.*;
 
 import gifAnimation.*;
 import ddf.minim.*;
