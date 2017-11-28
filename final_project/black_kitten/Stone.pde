@@ -31,11 +31,11 @@ class Stone {
     } else if (x >= width) {
       x -= width;
     }
-    if (y < 0) {
+    /*if (y < 0) {
       y += height;
     } else if (y >= height) {
       y -= height;
-    }
+    }*/
     //
   }
   void updateOld() {
@@ -61,14 +61,13 @@ class Stone {
   // collide
   //
 
-  void collide(Cat iCat) {
+  void collide(int xCat, int yCat) {
 
     // if cat hits on stones, game is over
-    if (x >= iCat.x && y >= iCat.y) {
+    if (x >= xCat && y >= yCat) {
       // 
       overlap = true;
-      // Constrain the energy level to be within bounds
-      //energy = constrain(energy,0,maxEnergy);
+
     }
   }
 
@@ -78,6 +77,10 @@ class Stone {
   void display() {
     fill(255); 
     noStroke();
+   
+      fill(255); 
     ellipse(x, y, size, size);
+     fill(255,0,0);
+     ellipse(x, y, 2, 2);
   }
 }

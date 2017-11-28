@@ -2,7 +2,7 @@ class Cat {
   float x, y, ySpeed;
   Cat() {
     x = width/3;
-    y = height - size;
+    y = height - sizeCat;
   }
   void showCat() {
     ellipse(x, y, 20, 20);
