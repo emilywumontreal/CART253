@@ -16,17 +16,17 @@ class Cat {
   void move() {
     y+=ySpeed; 
     for (int i = 0; i<3; i++) {
-      stones[i].x -= 3;
+     // stones[i].x -= 3;
     }
   }
-  void checkCollisions() {
-    if () {
-      gameOver=false;
-    }
-    for (int i = 0; i<3; i++) {
-      if ((x<stones[i].x + 10 && x > stones[i].x-10) && (y < stones[i].opening-100||y > stones[i].opening + 100)) {
-        gameOver=false;
-      }
-    }
-  }
+  //void checkCollisions() {
+  //  if (gameOver) {
+  //    gameOver=false;
+  //  }
+  //  for (int i = 0; i<3; i++) {
+  //    if ((x<stones[i].x + 10 && x > stones[i].x-10) && (y < stones[i].opening-100||y > stones[i].opening + 100)) {
+  //      gameOver=false;
+  //    }
+  //  }
+  //}
 }

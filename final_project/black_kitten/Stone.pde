@@ -1,5 +1,6 @@
 class Stone {
 
+
   // Position, size, energy, and fill color
   int x;
   int y;
@@ -22,7 +23,7 @@ class Stone {
   // Move the Stones from right to left on the bottom of game window.
   void update()
   {
-      int xMoveType = 8; //floor(random(1, 2));
+    int xMoveType = 8; //floor(random(1, 2));
     x -=xMoveType;
   }
   void updateOld() {
@@ -53,7 +54,7 @@ class Stone {
     // if cat hits on stones, game is over
     if (x >= iCat.x && y >= iCat.y) {
       // 
-       overlap = true;
+      overlap = true;
       // Constrain the energy level to be within bounds
       //energy = constrain(energy,0,maxEnergy);
     }
@@ -63,7 +64,7 @@ class Stone {
   //
   // Draw the stone on the screen as a rolling stone(round)
   void display() {
-    fill(fill); 
+    fill(255); 
     noStroke();
     ellipse(x, y, size, size);
   }

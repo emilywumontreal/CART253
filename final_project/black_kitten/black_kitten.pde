@@ -5,7 +5,7 @@ import ddf.minim.*;
 
 Minim minim;
 AudioInput mic;
-int size = 60;
+int size = 50;
 
 int bands = 32;
 
@@ -23,7 +23,7 @@ int rate = 2;
 
 // Adding stone on the screen
 // An array storing all the stones
-Stone[] stones = new Stone[10];
+Stone[] stones = new Stone[3];
 int stoneSize = 60;
 boolean gameOver = false;
 int score = 0;
@@ -49,10 +49,15 @@ void setup() {
 
   // inisialize all 100 stones 
   for (int i = 0; i < stones.length; i++) {
-    //int x = floor(random(0, width/stoneSize));
-    int x = width+100 +(i*100);
-   // int y = floor(random(0, height/stoneSize));
-    stones[i] = new Stone(x , height-size , stoneSize);
+    //  int x = floor(random(0, width/stoneSize));
+    
+    int x = floor(random(150 , width));//width+100 +(i*100);
+    int y = floor(random(0, height/stoneSize));
+    println("x="+x);
+    println("   y="+y);
+    stoneSize = floor(random(50,250));
+    
+    stones[i] = new Stone(x, height-size/2, stoneSize);
   }
 }
 
@@ -86,7 +91,26 @@ void draw() {
   image(loopingGif, x, y);
 
   for (int i = 0; i < stones.length; i++) {
+   println("stonesize"+stones[i].size);
+   println("stoneX"+stones[i].x);
     stones[i].display();
     stones[i].update();
+
+    //stones[i].drawStone();
+    // stones[i].checkPosition();
+  }
+}
+
+void checkCollisions() {
+  if (gameOver) {
+    text("game over", 170, 140);
+    text("score", 180, 240);
+    text(score, 280, 240);
+  }
+  for (int i = 0; i<stones.length; i++) {
+    if ((stones[i].size + size/2) >= 50 ) {
+      // if ((x<stones[i].x + 10 && x > stones[i].x-10) && (y < stones[i].opening-100||y > stones[i].opening + 100)) {
+      gameOver=false;
+    }
   }
 }
