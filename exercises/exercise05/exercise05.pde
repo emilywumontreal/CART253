@@ -4,6 +4,7 @@ int b = 0;
 int r = 0;
 int g = 0;
 void setup() {
+  frameRate(2);
   size(500, 500);
   // CHANGED set window resize trigger on
   surface.setResizable(true);

@@ -25,6 +25,18 @@ class Stone {
   {
     int xMoveType = 8; //floor(random(1, 2));
     x -=xMoveType;
+    //
+    if (x < 0) {
+      x += width;
+    } else if (x >= width) {
+      x -= width;
+    }
+    if (y < 0) {
+      y += height;
+    } else if (y >= height) {
+      y -= height;
+    }
+    //
   }
   void updateOld() {
 
