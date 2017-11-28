@@ -28,34 +28,8 @@ class Stone {
     //
     if (x < 0) {
       x += width;
-    } else if (x >= width) {
-      x -= width;
-    }
-    /*if (y < 0) {
-      y += height;
-    } else if (y >= height) {
-      y -= height;
-    }*/
-    //
-  }
-  void updateOld() {
+    } 
 
-    int xMoveType = floor(random(-1, 2));
-    int yMoveType = floor(random(-1, 2));
-    x += size * xMoveType;
-    y += size * yMoveType;
-
-    // 
-    if (x < 0) {
-      x += width;
-    } else if (x >= width) {
-      x -= width;
-    }
-    if (y < 0) {
-      y += height;
-    } else if (y >= height) {
-      y -= height;
-    }
   }
 
   // collide
@@ -80,7 +54,7 @@ class Stone {
    
       fill(255); 
     ellipse(x, y, size, size);
-     fill(255,0,0);
-     ellipse(x, y, 2, 2);
+     //fill(255,0,0);
+     //ellipse(x, y, 2, 2);
   }
 }
