@@ -146,11 +146,11 @@ void draw() {
         text("Score", width/3, height/3+ 100);
         text(score, width/3 + 200, height/3 + 100);
         loadStrings("record.txt");
-         if (myString != null) {
+      //   if (myString != null) {
      
-        if (score > int(bestScore) {
+    //    if (score > int(bestScore)) {
          saveStrings("record.txt", bestScore);
-        } 
+    //    } 
 
         textSize(25);
         fill(255);
