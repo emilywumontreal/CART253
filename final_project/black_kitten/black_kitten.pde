@@ -28,7 +28,7 @@ boolean gameStart = true;
 boolean gameOver = false;
 int score = 0;
 String bestScore ="";
-//String[] bestScore;
+
 
 
 boolean overlap = false;
@@ -40,7 +40,7 @@ FFT fft;
 void setup() {
   size(824, 468);
 
-  // bestScore = new String[]{"0"};
+
 
   stones = new ArrayList<Stone>();
 
@@ -56,7 +56,7 @@ void setup() {
   frameRate(30);
   //create the GifAnimation object
   imageMode(CORNER);
-  loopingGif = new Gif(this, "/images/rollingcat-maker.gif");
+  loopingGif = new Gif(this, "images/rollingcat-maker.gif");
 
   loopingGif.play();
 
@@ -71,7 +71,7 @@ void setup() {
     println("stoneValue"+stoneValue);
     xStone = xStone+ stones.get(i).size+stoneSize ;//+ (int)random(100, 200);
   }
-  println("stoneValue"+stoneValue);
+
   //inisialize sound files while the hit and jump happens
   jumpSound = minim.loadFile("sounds/jump.wav");
   hitSound = minim.loadFile("sounds/hit.wav");
@@ -80,139 +80,140 @@ void setup() {
 void draw() {
 
   if (gameStart) {
-    background(#497ED6);//(#0B2E63);
-    textSize(30);
-    image(loopingGif, xCat, yCat);
-    text("Blowing Kitty Go!", width/2, height/2);
-    text("Blow 'Puuu' to play!", width/2, height/2 + 50);
-    //
+
+    setupGradientBK();
+
+    //background(#497ED6);//(#0B2E63);
+    drawOpeningScreen();
     float level = mic.mix.level();
-    // draw level and little ruler one screen ?
+
+    // draw sound lines
     if (level > 0.4) {
-      mouseClicked();
-    }
-    /* adding spectrum into this game
-     fft = new FFT( 8, 512);
-     for (int i = 0; i < fft.specSize(); i++)
-     { 
-     println("sound map drawing");
-     // draw the line for frequency band i, scaling it up a bit so we can see it
-     line( i+20, height, i+20, height - fft.getBand(i)*8 );
-     }*/
-    for (int i =0; i< mic.bufferSize()-1; i++)
-    {
-      line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
-      //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
+      println("level 0.4 playing");
+      //reset();
+      gameStart = false;
     }
   } else {
-    //if (paused==false)
-    //{
 
-      background(#497ED6);//background(#0B2E63);
-      if (!gameOver) {
-        //
-        // adding spectrum into this game
-        for (int i =0; i< mic.bufferSize()-1; i++)
-        {
-          line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
-          //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
-        }
+    setupGradientBK();
+    //background(#497ED6);//background(#0B2E63);
+    if (!gameOver) {
+      //
+      // adding spectrum into this game
+      for (int i =0; i< mic.bufferSize()-1; i++)
+      {
+        line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
+        //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
+      }
 
-        float level = mic.mix.level();
-        //draw a level bar here by input voice?
-        // println(level);
-        // Adding variable level to adjust the height of cat jumping
-        if (level <= 0.1) index = 1;
-        if (level > 0.1 && level <=0.2) index = 1*rate;
-        if (level > 0.2 && level <=0.3) index = 2*rate;
-        if (level > 0.3 && level <=0.4) index = 3*rate;
-        if (level > 0.4 && level <=0.5) index = 4*rate;
-        if (level > 0.5 && level <=0.6) index = 5*rate;
-        if (level > 0.6 && level <=0.7) index = 6*rate;
-        if (level > 0.7 && level <=0.8) index = 7*rate;
-        if (level > 0.8 && level <=0.9) index = 8*rate;
-        if (level > 0.9 && level <=1.0) index = 9*rate;
-        if (level > 1.0) index = 10*rate;
+      float level = mic.mix.level();
+      //draw a level bar here by input voice?
+      // println(level);
+      // Adding variable level to adjust the height of cat jumping
+      if (level <= 0.1) index = 1;
+      if (level > 0.1 && level <=0.2) index = 1*rate;
+      if (level > 0.2 && level <=0.3) index = 2*rate;
+      if (level > 0.3 && level <=0.4) index = 3*rate;
+      if (level > 0.4 && level <=0.5) index = 4*rate;
+      if (level > 0.5 && level <=0.6) index = 5*rate;
+      if (level > 0.6 && level <=0.7) index = 6*rate;
+      if (level > 0.7 && level <=0.8) index = 7*rate;
+      if (level > 0.8 && level <=0.9) index = 8*rate;
+      if (level > 0.9 && level <=1.0) index = 9*rate;
+      if (level > 1.0) index = 10*rate;
 
-        if (!jumping&& level > 0.1) {
-          vy = -10;
-          jumping = true;
-          jumpSound.play();
-        }
+      if (!jumping&& level > 0.1) {
+        vy = -10;
+        jumping = true;
+        jumpSound.play();
+      }
 
-        if (jumping && yCat < height/index) { 
-          vy = 10;
-        }
-        if (jumping && yCat > height - sizeCat) {
-          jumping = false;
-          yCat = height - sizeCat - 42;
-          vy = 0;
-          jumpSound.rewind();
-        }
-        yCat += vy;
-        image(loopingGif, xCat, yCat);
+      if (jumping && yCat < height/index) { 
+        vy = 10;
+      }
+      if (jumping && yCat > height - sizeCat) {
+        jumping = false;
+        yCat = height - sizeCat - 42;
+        vy = 0;
+        jumpSound.rewind();
+      }
+      yCat += vy;
+      image(loopingGif, xCat, yCat);
 
-        for (int i = 0; i < stones.size(); i++) {
-          stones.get(i).display();
-          stones.get(i).update();
-        }
-        checkCollisions();
-        //
+      for (int i = 0; i < stones.size(); i++) {
+        stones.get(i).display();
+        stones.get(i).update();
+      }
+      checkCollisions();
+      //
 
-        //checkScoreFlag = false;
-        if (xCat > stones.get(0).x ) {
+      //checkScoreFlag = false;
+      for (int i = 0; i < stones.size(); i++) {
+
+        if (xCat > stones.get(i).x + stoneSize) {
           // println(stones.get(0).checkScoreFlag);
-          if (stones.get(0).checkScoreFlag==false) 
+          if (stones.get(i).checkScoreFlag==false) 
           {
 
-            stones.get(0).checkScoreFlag = true;
+            stones.get(i).checkScoreFlag = true;
             score++;
           }
         }
-        textSize(20);
-        text("Score : "+score, width - 150, 40);
-      } else {
-
-        textSize(35);
-        text("Game Over", width/3, height/3);
-        text("Score : ", width/3, height/3+ 50);
-        text(score, width/3 + 200, height/3 + 50);
-        String [] fromText = loadStrings("record.txt");
-        // println(fromText[0]);
-        bestScore = fromText[0];
-
-        if (score > parseInt(fromText[0])) {
-          String[] test = new String[1];
-          test[0] = Integer.toString(score);
-          bestScore =  test[0];
-          saveStrings("record.txt", test );
-        } 
-
-
-        text("Best Score : "+ bestScore, width/3, height/3 + 100 );         
-        textSize(25);
-        fill(255);
-        text("Blow 'Puuuuuuuuuu' to play", width/3, height/3 + 150);
-
-        float level = mic.mix.level();
-        if (level > 0.4) {
-          mouseClicked();
-        }
       }
-   // pause }
+      textSize(20);
+      text("Score : "+score, width - 150, 40);
+    } else {
+
+      textSize(35);
+      text("Game Over", width/3, height/3);
+      text("Score : ", width/3, height/3+ 50);
+      text(score, width/3 + 200, height/3 + 50);
+      String [] fromText = loadStrings("record.txt");
+      // println(fromText[0]);
+      bestScore = fromText[0];
+
+      if (score > parseInt(fromText[0])) {
+        String[] test = new String[1];
+        test[0] = Integer.toString(score);
+        bestScore =  test[0];
+        saveStrings("record.txt", test );
+      } 
+
+
+      text("Best Score : "+ bestScore, width/3, height/3 + 100 );         
+      textSize(25);
+      fill(255);
+      text("Blow 'Puuuuuuuuuu' to play", width/3, height/3 + 150);
+
+      float level = mic.mix.level();
+      if (level > 0.4) {
+        reset();
+      }
+    }
+    // pause }
   }
 }
 
 void checkCollisions() {
   gameOver =false;
   // println(abs(xCat - stones[0].x));
-  for (int i = 0; i<1; i++) {
-    //println(" stone size loop");
+  for (int i = 0; i<stones.size(); i++) {
+
     if (dist(xCat, yCat, stones.get(i).x, stones.get(i).y)< stones.get(i).size + sizeCat/2) {
       gameOver=true;
       hitSound.play();
+    }
+  }
+  if (!gameOver) {
 
-      //   println("collison! gameover");
+    int xStone = width + stoneSize;
+    for (int i = 0; i < stones.size(); i++) {
+      if (stones.get(i).x < 0) {
+        stones.remove(i);
+        stoneSize = floor(random(50, 200));
+        stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue));
+        xStone = xStone+ stones.get(i).size+stoneSize + (int)random(100, 200);
+      }
     }
   }
 }
@@ -226,6 +227,7 @@ void mouseClicked()
     gameStart = false;
   } else if (gameOver)
   {
+    println("gameOver = "+gameOver);
     reset();
   }
   //} //else  if (mouseButton == RIGHT)
@@ -237,8 +239,10 @@ void mouseClicked()
 void reset()
 {
   //remove object stone from arraylist
-  stones.remove(0);
+  //  stones.remove(0);
   //stop hitSound
+  stones = new ArrayList<Stone>();
+  println("in reset");
   hitSound.rewind();
 
   paused=false;
@@ -249,15 +253,50 @@ void reset()
   //
   xCat = width/5;
   yCat = height - sizeCat;
-  // inisialize all 100 stones 
+  // inisialize stones 
   int xStone = width + stoneSize;
   for (int i = 0; i < 1; i++) { //stones.size()
-    println("reset! for loop");
+
     stoneSize = floor(random(50, 200));
-    println(stoneSize);
+    //println(stoneSize);
     stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue)); 
     //stones[i] = new Stone(xStone, height-stoneSize/2, stoneSize); 
     //stoneSize = floor(random(50, 200));
     xStone = xStone+ stones.get(i).size+stoneSize + (int)random(100, 200);
+  }
+}
+void setupGradientBK()
+{
+  for (int i =0; i <height; i++)
+  {
+    color from = #0B2E63;
+    color to =#00B6FF;
+    float percentage = (float)i/height;
+    //println(percentage);
+
+    color newColor = lerpColor(from, to, percentage);
+    stroke(newColor);
+    line(0, i, width, i);
+  }
+}
+void drawOpeningScreen() {
+  textSize(30);
+  image(loopingGif, xCat, yCat);
+  text("Blowing Kitty Go!", width/2, height/2);
+  text("Blow 'Puuu' to play!", width/2, height/2 + 50);
+  //
+
+  /* adding spectrum into this game
+   fft = new FFT( 8, 512);
+   for (int i = 0; i < fft.specSize(); i++)
+   { 
+   println("sound map drawing");
+   // draw the line for frequency band i, scaling it up a bit so we can see it
+   line( i+20, height, i+20, height - fft.getBand(i)*8 );
+   }*/
+  for (int i =0; i< mic.bufferSize()-1; i++)
+  {
+    line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
+    //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
   }
 }
