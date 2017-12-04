@@ -5,17 +5,20 @@ class Stone {
   int x;
   int y;
   int size;
+  int value;
   int opening;
   color fill = color(255, 0, 0);
+  boolean checkScoreFlag = false;
 
   // Stone(tempX, tempY, tempSize)
   //
-  // Set up the Stone with the specified location and size
+  // Set up the Stone with the specified location, value and size
   // 
-  Stone(int tempX, int tempY, int tempSize) {
+  Stone(int tempX, int tempY, int tempSize, int tempValue) {
     x = tempX;
     y = tempY;
     size = tempSize;
+    value = tempValue;
   }
 
   // update()
@@ -28,8 +31,13 @@ class Stone {
     //
     if (x < 0) {
       x += width;
+      checkScoreFlag=false;
+   
     } 
-
+    if (y < 0 ) {
+       stones.remove(0);
+       stones.add(new Stone(x,y,size,value));
+    }
   }
 
   // collide

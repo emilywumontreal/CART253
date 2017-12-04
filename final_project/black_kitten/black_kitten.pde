@@ -18,15 +18,18 @@ boolean jumping = false;
 int index = 1;
 int rate = 2;
 
-// An arraylist storing all the stones
-//Stone[] stones = new Stone[2];
+// An arraylist storing the stones
+
 ArrayList<Stone> stones;
 int stoneSize = 60;
+int stoneValue = 1;
 
 boolean gameStart = true;
 boolean gameOver = false;
 int score = 0;
-String[] bestScore;
+String bestScore ="";
+//String[] bestScore;
+
 
 boolean overlap = false;
 boolean paused =false;
@@ -36,8 +39,9 @@ FFT fft;
 
 void setup() {
   size(824, 468);
-  //  bestScore[0] = new String("");
-  bestScore = new String[]{"0"};
+
+  // bestScore = new String[]{"0"};
+
   stones = new ArrayList<Stone>();
 
   xCat = width/5;
@@ -59,11 +63,15 @@ void setup() {
   // inisialize arraylist stones 
   int xStone = width + stoneSize;
   for (int i = 0; i < 1; i++) {
-
-    stones.add (new Stone(xStone, height-stoneSize/2, stoneSize)); 
     stoneSize = floor(random(50, 200));
+    if (stoneSize >= 90 && stoneSize < 130) stoneValue = 2;
+    if (stoneSize >= 130 && stoneSize < 160) stoneValue = 3;
+    if (stoneSize >= 160 && stoneSize < 200) stoneValue = 4;
+    stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue)); 
+    println("stoneValue"+stoneValue);
     xStone = xStone+ stones.get(i).size+stoneSize ;//+ (int)random(100, 200);
   }
+  println("stoneValue"+stoneValue);
   //inisialize sound files while the hit and jump happens
   jumpSound = minim.loadFile("sounds/jump.wav");
   hitSound = minim.loadFile("sounds/hit.wav");
@@ -77,32 +85,42 @@ void draw() {
     image(loopingGif, xCat, yCat);
     text("Blowing Kitty Go!", width/2, height/2);
     text("Blow 'Puuu' to play!", width/2, height/2 + 50);
-    // adding spectrum into this game
-    fft = new FFT( 8, 512);
-    for (int i = 0; i < fft.specSize(); i++)
-    { 
-      println("band map");
-      // draw the line for frequency band i, scaling it up a bit so we can see it
-      line( i, height, i, height - fft.getBand(i)*8 );
+    //
+    float level = mic.mix.level();
+    // draw level and little ruler one screen ?
+    if (level > 0.4) {
+      mouseClicked();
+    }
+    /* adding spectrum into this game
+     fft = new FFT( 8, 512);
+     for (int i = 0; i < fft.specSize(); i++)
+     { 
+     println("sound map drawing");
+     // draw the line for frequency band i, scaling it up a bit so we can see it
+     line( i+20, height, i+20, height - fft.getBand(i)*8 );
+     }*/
+    for (int i =0; i< mic.bufferSize()-1; i++)
+    {
+      line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
+      //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
     }
   } else {
-    if (paused==false)
-    {
+    //if (paused==false)
+    //{
+
       background(#497ED6);//background(#0B2E63);
       if (!gameOver) {
         //
         // adding spectrum into this game
-        fft = new FFT( 8, 512);
-        for (int i = 0; i < fft.specSize(); i++)
-        {      
-          // draw the line for frequency band i, scaling it up a bit so we can see it
-          line( i, height, i, height - fft.getBand(i)*8 );
-          //  line(30,130,80,250);
-          // println("band map");
+        for (int i =0; i< mic.bufferSize()-1; i++)
+        {
+          line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
+          //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
         }
 
         float level = mic.mix.level();
-        println(level);
+        //draw a level bar here by input voice?
+        // println(level);
         // Adding variable level to adjust the height of cat jumping
         if (level <= 0.1) index = 1;
         if (level > 0.1 && level <=0.2) index = 1*rate;
@@ -127,7 +145,7 @@ void draw() {
         }
         if (jumping && yCat > height - sizeCat) {
           jumping = false;
-          yCat = height - sizeCat;
+          yCat = height - sizeCat - 42;
           vy = 0;
           jumpSound.rewind();
         }
@@ -139,55 +157,81 @@ void draw() {
           stones.get(i).update();
         }
         checkCollisions();
+        //
+
+        //checkScoreFlag = false;
+        if (xCat > stones.get(0).x ) {
+          // println(stones.get(0).checkScoreFlag);
+          if (stones.get(0).checkScoreFlag==false) 
+          {
+
+            stones.get(0).checkScoreFlag = true;
+            score++;
+          }
+        }
+        textSize(20);
+        text("Score : "+score, width - 150, 40);
       } else {
 
-        textSize(45);
+        textSize(35);
         text("Game Over", width/3, height/3);
-        text("Score", width/3, height/3+ 100);
-        text(score, width/3 + 200, height/3 + 100);
-        loadStrings("record.txt");
-      //   if (myString != null) {
-     
-    //    if (score > int(bestScore)) {
-         saveStrings("record.txt", bestScore);
-    //    } 
+        text("Score : ", width/3, height/3+ 50);
+        text(score, width/3 + 200, height/3 + 50);
+        String [] fromText = loadStrings("record.txt");
+        // println(fromText[0]);
+        bestScore = fromText[0];
 
+        if (score > parseInt(fromText[0])) {
+          String[] test = new String[1];
+          test[0] = Integer.toString(score);
+          bestScore =  test[0];
+          saveStrings("record.txt", test );
+        } 
+
+
+        text("Best Score : "+ bestScore, width/3, height/3 + 100 );         
         textSize(25);
         fill(255);
-        text("Say 'Playyy' to play", width/3, height/3 + 200);
+        text("Blow 'Puuuuuuuuuu' to play", width/3, height/3 + 150);
+
+        float level = mic.mix.level();
+        if (level > 0.4) {
+          mouseClicked();
+        }
       }
-    }
+   // pause }
   }
 }
 
 void checkCollisions() {
   gameOver =false;
   // println(abs(xCat - stones[0].x));
-  for (int i = 0; i<stones.size(); i++) {
+  for (int i = 0; i<1; i++) {
+    //println(" stone size loop");
     if (dist(xCat, yCat, stones.get(i).x, stones.get(i).y)< stones.get(i).size + sizeCat/2) {
       gameOver=true;
       hitSound.play();
 
-      println("collison! gameover");
+      //   println("collison! gameover");
     }
   }
 }
 void mouseClicked()
 {
 
-  if (mouseButton == LEFT)
+  //if (mouseButton == LEFT)
+  //{
+  if (gameStart)
   {
-    if (gameStart)
-    {
-      gameStart = false;
-    } else if (gameOver)
-    {
-      reset();
-    }
-  } else  if (mouseButton == RIGHT)
+    gameStart = false;
+  } else if (gameOver)
   {
-    paused=!paused;
+    reset();
   }
+  //} //else  if (mouseButton == RIGHT)
+  // {
+  //  paused=!paused;
+  // }
 }
 
 void reset()
@@ -201,6 +245,7 @@ void reset()
   // set up flag to control the process of game (opening or closing)
   gameOver =false;
   gameStart =true;
+  score = 0;
   //
   xCat = width/5;
   yCat = height - sizeCat;
@@ -210,7 +255,7 @@ void reset()
     println("reset! for loop");
     stoneSize = floor(random(50, 200));
     println(stoneSize);
-    stones.add (new Stone(xStone, height-stoneSize/2, stoneSize)); 
+    stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue)); 
     //stones[i] = new Stone(xStone, height-stoneSize/2, stoneSize); 
     //stoneSize = floor(random(50, 200));
     xStone = xStone+ stones.get(i).size+stoneSize + (int)random(100, 200);
