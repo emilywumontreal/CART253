@@ -1,4 +1,23 @@
-//import processing.sound.*;
+/*
+
+ Blowing Kitten Go!
+ 
+ A lovely little kitten game warms up the morning and drawn when one is on the way to work/school and comes back home. 
+ By blowing gentally the little kittey, a lovely black kitten jumps up over the ball quietly without distorbing people around you. 
+ what is creative in this game is the way to play the game. it is out of the box that play a game need fingers on the phone.
+ it is a great and nature way to communicate with machine and devices(any tools). it is also following the trend of AI.
+ inspirations are from Pippin, when he showed a sound control game video in the class , and from a film called "Her" also.
+ through an unexpected perspective, it is a novelty to the player and brings pleasure to them.
+ 
+ this is a sound level controling game.  a player needs to learn to blow at the right moment and also need to learn how to blow 
+ constantly and steably to get the best reasult. this game is constantly receiving input data from mic and analysis it to control
+ how height the cat can jump in order to avoid collision. When the sound level is greater than 0.4, it is functional to control jumping process.
+ when the current score is greater than a specific number(currently is 5), it speeds up the stones. The size of stones are randomly created 
+ between 50 to 150 pixels. When cat starting jump and geting hit, sounds play. the movement of cat itself(rolling eyes) are controled by gifanimation library.
+ cat in this game is a gif object, not a class. it is the way to simplify this game by removing unnecessary objects and codes.
+ 
+ the end.
+ */
 
 import gifAnimation.*;
 import ddf.minim.*;
@@ -14,7 +33,8 @@ int xCat ;
 int yCat ;
 int vx = 0;
 int vy = 0;
-boolean jumping = false;
+//Cat cat ;
+boolean isJump = false;
 int index = 1;  //jumping height parameter
 int rate = 2; //
 
@@ -24,32 +44,34 @@ ArrayList<Stone> stones;
 int stoneSize = 60;
 int stoneValue = 1;
 
+// game process control vaiables
 boolean gameStart = true;
 boolean gameOver = false;
+float functionalPoint = 0.4; // sound level ,which is greater than 0.4 , can control the cat jump. 
 int score = 0;
 String bestScore ="";
+float level = 0.0;
 
-
-
+// collision flag
 boolean overlap = false;
-boolean paused =false;
 
 AudioPlayer jumpSound, hitSound;
 FFT fft;
 
 void setup() {
+
   size(824, 468);
   stones = new ArrayList<Stone>();
 
   xCat = width/5;
   yCat = height - sizeCat;
-
   minim = new Minim(this);
-  // We use minim.getLineIn() to get access to the microphone data 
+  // use minim.getLineIn() to get access to the microphone data 
   mic = minim.getLineIn();
 
-  //Changed framerate
+  //setup framerate
   frameRate(20);
+
   //create the GifAnimation object
   imageMode(CORNER);
   loopingGif = new Gif(this, "images/rollingcat-maker.gif");
@@ -58,13 +80,9 @@ void setup() {
   // inisialize arraylist stones 
   int xStone = width + stoneSize;
   for (int i = 0; i < 1; i++) {
-    stoneSize = floor(random(50, 150));
-    if (stoneSize >= 90 && stoneSize < 130) stoneValue = 2;
-    if (stoneSize >= 130 && stoneSize < 160) stoneValue = 3;
-    if (stoneSize >= 160 && stoneSize < 200) stoneValue = 4;
+
     stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue)); 
-    // println("stonesize"+stoneSize);
-    xStone = xStone+ stones.get(i).size+stoneSize ;//+ (int)random(100, 200);
+    xStone = xStone+ stones.get(i).size+stoneSize ;
   }
 
   //inisialize sound files while the hit and jump happens
@@ -73,58 +91,59 @@ void setup() {
 }
 
 void draw() {
-
+  // if it is the very beginning of the game, show opening screen of this game.
   if (gameStart) {
 
     setupGradientBG();
-    //background(#497ED6);//(#0B2E63);
     drawOpeningScreen();
-    float level = mic.mix.level();
-    // draw sound lines
-    if (level > 0.4) {
-      println("level= "+level);
+    level = mic.mix.level();
+    if (level > functionalPoint) {
       gameStart = false;
     }
   } else {
-
+    // if it is game running, show running cat screen of this game.
     setupGradientBG();
+    // if game is not over, show spectrum, draw stone and cat, check if cat and stone got collided. 
     if (!gameOver) {
       // adding spectrum into this game
       for (int i =0; i< mic.bufferSize()-1; i++)
       {
+        // the sound is MONO. so draw left or right specturm is the same. I draw the left here.
         line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
-        //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
       }
-      float level = mic.mix.level();
-      //draw a level bar here by input voice?
-      // Adding variable level to adjust the height of cat jumping
+
+      // variable index is for controlling the height of cat can jump.
+      level = mic.mix.level();
       index = getIndex(level);
-      if (!jumping && level > 0.1) {
+
+      if (!isJump && level > 0.1) {
         vy = -10;
-        jumping = true;
+        isJump = true;
         jumpSound.play();
       }
-      if (jumping && yCat < height/index) { 
+      if (isJump && yCat < height/index) { 
         vy = 10;
       }
-      if (jumping && yCat > height - sizeCat) {
-        jumping = false;
+      if (isJump && yCat > height - sizeCat) {
+        isJump = false;
         yCat = height - sizeCat - 42;
         vy = 0;
         jumpSound.rewind();
       }
       yCat += vy;
       image(loopingGif, xCat, yCat);
-
+      
+      //
       for (int i = 0; i < stones.size(); i++) {
         stones.get(i).display();
         stones.get(i).update();
       }
       checkCollisions();
       showCurrentScore();
-    } else {
+    } else { 
+      // show game over screen and show current score and best score
       String [] fromText = loadStrings("record.txt");
-       bestScore = fromText[0];
+      bestScore = fromText[0];
       if (score > parseInt(fromText[0])) {
         String[] test = new String[1];
         test[0] = Integer.toString(score);
@@ -132,13 +151,18 @@ void draw() {
         saveStrings("record.txt", test );
       } 
       showGameOverScreen();
-      float level = mic.mix.level();
+      level = mic.mix.level();
       if (level > 0.4) {
         reset();
       }
     }
   }
 }
+// checkCollisions()
+//
+//check if cat and stone get overlaped. 
+//the reason why I put this method in the main program is following the rules of "high cohesion and low interconnection"
+// this state of collision belong to neighter stone or cat. 
 
 void checkCollisions() {
   gameOver =false;
@@ -148,63 +172,57 @@ void checkCollisions() {
       gameOver=true;
       hitSound.play();
     }
-  }
+  } 
   if (!gameOver) {
     int xStone = width + stoneSize;
     for (int i = 0; i < stones.size(); i++) {
-      if (stones.get(i).x < 10) {  // when the stone touch the left border of screen?
+      if (stones.get(i).x < 0) {  // when the stone touch the left border of screen?
+
         stones.remove(i);
         stoneSize = floor(random(50, 150));
-        println("stonesize"+ stoneSize);
         stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue));
         xStone = xStone+ stones.get(i).size+stoneSize + (int)random(100, 200);
       }
     }
   }
 }
+
+// mouseClicked()
+//
+// this method is for player who wishs to use mouse to restart the game.
+
 void mouseClicked()
 {
-
-  //if (mouseButton == LEFT)
-  //{
   if (gameStart)
   {
     gameStart = false;
   } else if (gameOver)
   {
-    // println("gameOver = "+gameOver);
     reset();
   }
-  //} //else  if (mouseButton == RIGHT)
-  // {
-  //  paused=!paused;
-  // }
 }
 
 void reset()
 {
-  //stop hitSound
+  // recreate a new ArrayList when player reset the game.
   stones = new ArrayList<Stone>();
-  //  println("in reset");
+  //stop play hit Sound
   hitSound.rewind();
 
-  paused=false;
   // set up flag to control the process of game (opening or closing)
   gameOver =false;
   gameStart =true;
   score = 0;
-  //
+  // setup the position of cat
   xCat = width/5;
   yCat = height - sizeCat;
+
   // inisialize stones 
   int xStone = width + stoneSize;
-  for (int i = 0; i < 1; i++) { //stones.size()
-
+  for (int i = 0; i < 1; i++) { 
+    // when reset() being called, create a new stone object with random size
     stoneSize = floor(random(50, 150));
-    println(stoneSize);
     stones.add (new Stone(xStone, height-stoneSize/2, stoneSize, stoneValue)); 
-    //stones[i] = new Stone(xStone, height-stoneSize/2, stoneSize); 
-    //stoneSize = floor(random(50, 200));
     xStone = xStone+ stones.get(i).size+stoneSize + (int)random(100, 200);
   }
 }
@@ -216,8 +234,6 @@ void setupGradientBG()
     color from = #0B2E63;
     color to =#00B6FF;
     float percentage = (float)i/height;
-    //println(percentage);
-
     color newColor = lerpColor(from, to, percentage);
     stroke(newColor);
     line(0, i, width, i);
@@ -227,23 +243,14 @@ void setupGradientBG()
 void drawOpeningScreen() {
   textSize(30);
   fill(255);
+  //cat.showCat();
   image(loopingGif, xCat, yCat);
   text("Blowing Kitty Go!", width/2, height/2);
   text("Blow 'Puuu' to play!", width/2, height/2 + 50);
-  //
 
-  /* adding spectrum into this game
-   fft = new FFT( 8, 512);
-   for (int i = 0; i < fft.specSize(); i++)
-   { 
-   println("sound map drawing");
-   // draw the line for frequency band i, scaling it up a bit so we can see it
-   line( i+20, height, i+20, height - fft.getBand(i)*8 );
-   }*/
   for (int i =0; i< mic.bufferSize()-1; i++)
   {
     line(i, 50+mic.left.get(i)*50, i+1, 50+mic.left.get(i+1)*50);
-    //line(i, 150+mic.right.get(i)*50, i+1, 150+mic.right.get(i+1)*50);
   }
 }
 
@@ -279,7 +286,7 @@ int getIndex(float level)
   if (level > 0.8 && level <=0.9) index = 8*rate;
   if (level > 0.9 && level <=1.0) index = 9*rate;
   if (level > 1.0) index = 10*rate;
-  println("index = "+ index);
+  // println("index = "+ index);
   return index;
 }
 
